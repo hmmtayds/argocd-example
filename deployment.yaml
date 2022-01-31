@@ -1,20 +1,25 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simple-deployment
+  namespace: argocd-test
+  labels:
+    app: simple-deployment
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: trivial-go-web-app
+      app: simple-deployment
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
-        app: trivial-go-web-app
+        app: simple-deployment
     spec:
       containers:
-      - name: webserver-simple
-        image: docker.io/kostiscodefresh/gitops-simple-app:v2.0
+      - image: docker.io/kostiscodefresh/gitops-simple-app:v2.0
+        imagePullPolicy: Always
+        name: webserver-simple
         ports:
         - containerPort: 8080
